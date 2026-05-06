@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.matplotlib/
+.env
+.env.*
+*.log
+
+# Backups locales generados durante pruebas
+modelo_engagement_backup.pkl
+scaler_engagement_backup.pkl
