@@ -80,6 +80,7 @@ HTML = """
       --muted: #a7b0bf;
       --accent: #22c55e;
       --red: #ef4444;
+      --success-soft: rgba(34, 197, 94, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -92,10 +93,76 @@ HTML = """
       font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
     }
 
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.65), transparent 70%);
+    }
+
     .shell {
       width: min(1240px, calc(100% - 32px));
       margin: 0 auto;
       padding: 24px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-nav {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(23, 27, 33, 0.86);
+      padding: 0 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-item {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      background: var(--panel-2);
+    }
+
+    .deploy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .deploy-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--success-soft);
     }
 
     .topbar {
@@ -185,6 +252,46 @@ HTML = """
       color: var(--accent);
     }
 
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .overview-card {
+      min-height: 86px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(23, 27, 33, 0.9);
+      padding: 14px;
+    }
+
+    .overview-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .overview-card strong {
+      display: block;
+      margin-top: 10px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .overview-card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
     .workspace {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 330px;
@@ -199,6 +306,7 @@ HTML = """
       border-radius: 8px;
       background: #050608;
       aspect-ratio: 16 / 9;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
     }
 
     video,
@@ -241,6 +349,7 @@ HTML = """
       border-radius: 8px;
       background: var(--panel);
       overflow: hidden;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
     }
 
     .panel-section {
@@ -355,6 +464,29 @@ HTML = """
       font-weight: 700;
     }
 
+    .system-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .system-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .system-list strong {
+      color: var(--text);
+      font-weight: 800;
+      text-align: right;
+    }
+
     .dot {
       width: 10px;
       height: 10px;
@@ -362,8 +494,76 @@ HTML = """
       background: var(--dot-color);
     }
 
+    .insights {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .info-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(23, 27, 33, 0.9);
+      padding: 16px;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pipeline-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0b0f14;
+      padding: 12px;
+      min-height: 92px;
+    }
+
+    .pipeline-step span {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pipeline-step strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .pipeline-step small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .note {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .app-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
     @media (max-width: 980px) {
       .workspace { grid-template-columns: 1fr; }
+      .overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .insights { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 720px) {
@@ -373,9 +573,14 @@ HTML = """
       }
 
       .topbar { display: block; }
+      .app-nav { height: auto; align-items: flex-start; flex-direction: column; padding: 10px; }
+      .nav-links { width: 100%; overflow-x: auto; }
       .brand { margin-bottom: 10px; }
       h1 { font-size: 19px; }
       .status-pill { width: 100%; }
+      .overview { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: 1fr; }
+      .app-footer { display: block; }
 
       .banner {
         height: 58px;
@@ -389,6 +594,15 @@ HTML = """
 </head>
 <body>
   <main class="shell">
+    <nav class="app-nav" aria-label="Navegacion principal">
+      <div class="nav-links">
+        <a class="nav-item active" href="#monitor">Monitor en vivo</a>
+        <a class="nav-item" href="#arquitectura">Arquitectura</a>
+        <a class="nav-item" href="#entrega">Entrega</a>
+      </div>
+      <div class="deploy-badge">Railway activo</div>
+    </nav>
+
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
@@ -402,7 +616,30 @@ HTML = """
       <div id="statusPill" class="status-pill">CAMARA DETENIDA</div>
     </header>
 
-    <div class="workspace">
+    <section class="overview" aria-label="Resumen del sistema">
+      <div class="overview-card">
+        <span>Modelo</span>
+        <strong>Gradient Boosting</strong>
+        <small>Clasificacion multiclase</small>
+      </div>
+      <div class="overview-card">
+        <span>Features</span>
+        <strong>11</strong>
+        <small>Razones geometricas</small>
+      </div>
+      <div class="overview-card">
+        <span>Dataset</span>
+        <strong>9.217</strong>
+        <small>Muestras procesadas</small>
+      </div>
+      <div class="overview-card">
+        <span>Estado</span>
+        <strong id="systemValue">Listo</strong>
+        <small>Inferencia en navegador + backend</small>
+      </div>
+    </section>
+
+    <div id="monitor" class="workspace">
       <section class="stage" aria-label="Camara y deteccion facial">
         <video id="video" autoplay playsinline muted></video>
         <canvas id="overlay"></canvas>
@@ -448,8 +685,59 @@ HTML = """
             <div class="legend-row"><span class="dot" style="--dot-color:#fde047"></span>Sorprendido</div>
           </div>
         </section>
+
+        <section class="panel-section">
+          <h2 class="section-title">Sistema</h2>
+          <ul class="system-list">
+            <li><span>Backend</span><strong>Flask + Gunicorn</strong></li>
+            <li><span>Vision</span><strong>MediaPipe FaceMesh</strong></li>
+            <li><span>Deploy</span><strong>Railway</strong></li>
+          </ul>
+        </section>
       </aside>
     </div>
+
+    <section id="arquitectura" class="insights" aria-label="Arquitectura del sistema">
+      <div class="info-panel">
+        <h2 class="section-title">Flujo de inferencia</h2>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <span>01</span>
+            <strong>Camara web</strong>
+            <small>El navegador captura frames con permiso del usuario.</small>
+          </div>
+          <div class="pipeline-step">
+            <span>02</span>
+            <strong>FaceMesh</strong>
+            <small>MediaPipe ubica landmarks de ojos, boca y cejas.</small>
+          </div>
+          <div class="pipeline-step">
+            <span>03</span>
+            <strong>Features</strong>
+            <small>Se calculan aperturas, simetrias y posiciones normalizadas.</small>
+          </div>
+          <div class="pipeline-step">
+            <span>04</span>
+            <strong>Prediccion</strong>
+            <small>El modelo entrega el estado de engagement en tiempo real.</small>
+          </div>
+        </div>
+      </div>
+
+      <div id="entrega" class="info-panel">
+        <h2 class="section-title">Uso academico</h2>
+        <p class="note">
+          La aplicacion esta orientada a aulas virtuales y puede complementar plataformas de videoconferencia
+          con senales agregadas de atencion. El uso responsable requiere consentimiento, privacidad y no almacenar
+          imagenes faciales sin autorizacion.
+        </p>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <span>Proyecto 2 - Medidor de Engagement Facial</span>
+      <span>FER2013 + MediaPipe FaceMesh + Machine Learning</span>
+    </footer>
 
     <canvas id="capture" style="display:none;"></canvas>
   </main>
@@ -464,6 +752,7 @@ HTML = """
     const confidenceValue = document.getElementById("confidenceValue");
     const faceValue = document.getElementById("faceValue");
     const frameState = document.getElementById("frameState");
+    const systemValue = document.getElementById("systemValue");
     const hint = document.getElementById("hint");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
@@ -586,6 +875,7 @@ HTML = """
         setStatus(stableLabel, stableColor);
         setConfidence(data.confidence);
         faceValue.textContent = data.points && data.points.length ? "Si" : "No";
+        systemValue.textContent = data.points && data.points.length ? "Activo" : "Buscando";
         tickFps();
 
         if (data.confidence !== null && data.confidence !== undefined) {
@@ -622,6 +912,7 @@ HTML = """
       } catch (error) {
         hint.textContent = "El navegador no pudo acceder a la camara.";
         hint.classList.add("error");
+        systemValue.textContent = "Permiso";
       }
     }
 
@@ -639,6 +930,7 @@ HTML = """
       setConfidence(null);
       faceValue.textContent = "No";
       frameState.textContent = "0 FPS";
+      systemValue.textContent = "Listo";
       statusPill.textContent = "CAMARA DETENIDA";
       hint.textContent = "Sistema listo para iniciar.";
     }
