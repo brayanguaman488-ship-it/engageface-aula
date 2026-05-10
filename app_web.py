@@ -71,19 +71,27 @@ HTML = """
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #0f1115;
-      --panel: #171b21;
-      --panel-2: #202631;
-      --line: #303846;
-      --text: #f7fafc;
-      --muted: #a7b0bf;
-      --accent: #22c55e;
-      --red: #ef4444;
-      --success-soft: rgba(34, 197, 94, 0.12);
+      --sidebar: #0F2742;
+      --primary: #2563EB;
+      --primary-soft: #DBEAFE;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #0F172A;
+      --muted: #64748B;
+      --concentrado: #22C55E;
+      --confundido: #F97316;
+      --aburrido: #9CA3AF;
+      --sorprendido: #EAB308;
+      --sin-rostro: #EF4444;
+      --state-color: #EF4444;
+      --state-soft: rgba(239, 68, 68, 0.12);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
     }
 
     * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -93,220 +101,323 @@ HTML = """
       font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.65), transparent 70%);
+    .app {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
     }
 
-    .shell {
-      width: min(1240px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .app-nav {
-      height: 44px;
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: linear-gradient(180deg, #0F2742 0%, #0B1B2F 100%);
+      color: #FFFFFF;
+      padding: 26px 20px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(23, 27, 33, 0.86);
-      padding: 0 12px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-item {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 8px 10px;
-      border-radius: 8px;
-    }
-
-    .nav-item.active {
-      color: var(--text);
-      background: var(--panel-2);
-    }
-
-    .deploy-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .deploy-badge::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 4px var(--success-soft);
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      min-height: 58px;
-      margin-bottom: 18px;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 18px 0 45px rgba(15, 39, 66, 0.18);
+      z-index: 2;
     }
 
     .brand {
       display: flex;
-      align-items: center;
       gap: 12px;
-      min-width: 0;
+      align-items: center;
     }
 
     .brand-mark {
-      width: 50px;
-      height: 50px;
-      border: 1px solid #415064;
-      border-radius: 8px;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      background:
-        linear-gradient(135deg, rgba(34, 197, 94, 0.22), rgba(249, 115, 22, 0.16)),
-        #11161c;
-      flex: 0 0 auto;
+      background: rgba(37, 99, 235, 0.16);
+      border: 1px solid rgba(219, 234, 254, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      font-size: 28px;
     }
 
-    .brand-face {
-      width: 27px;
-      height: 27px;
-      border: 2px solid var(--accent);
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .brand-face::before,
-    .brand-face::after {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .brand-face::before { left: 6px; }
-    .brand-face::after { right: 6px; }
-
-    .brand-mouth {
-      position: absolute;
-      left: 7px;
-      bottom: 6px;
-      width: 11px;
-      height: 5px;
-      border-bottom: 2px solid #f97316;
-      border-radius: 0 0 12px 12px;
-    }
-
-    h1 {
+    .brand h1 {
       margin: 0;
-      font-size: 25px;
-      font-weight: 800;
+      font-size: 20px;
+      line-height: 1.1;
       letter-spacing: 0;
     }
 
-    .subtitle {
+    .brand p {
+      margin: 6px 0 0;
+      color: #BFDBFE;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .menu {
+      display: grid;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(226, 232, 240, 0.14);
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 44px;
+      padding: 0 13px;
+      border-radius: 12px;
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      transform: translateX(2px);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.28);
+    }
+
+    .menu-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      flex: 0 0 auto;
+    }
+
+    .academic-card {
+      margin-top: auto;
+      border: 1px solid rgba(219, 234, 254, 0.18);
+      border-radius: 18px;
+      background: rgba(37, 99, 235, 0.14);
+      padding: 18px;
+    }
+
+    .academic-card strong,
+    .academic-card span {
+      display: block;
+    }
+
+    .academic-card strong {
+      font-size: 15px;
+      margin: 8px 0;
+    }
+
+    .academic-card span {
+      color: #BFDBFE;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .welcome {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .welcome-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 19px;
+      display: grid;
+      place-items: center;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #2563EB, #3B82F6);
+      box-shadow: 0 18px 35px rgba(37, 99, 235, 0.28);
+      font-size: 28px;
+    }
+
+    .welcome h2 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 30px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .welcome p {
+      max-width: 680px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .badges {
+      display: grid;
+      grid-template-columns: repeat(4, max-content);
+      gap: 10px;
+    }
+
+    .badge {
+      min-width: 118px;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+      padding: 10px 13px;
+      box-shadow: var(--shadow);
+    }
+
+    .badge-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #ECFDF5;
+      color: var(--concentrado);
+      font-size: 17px;
+      flex: 0 0 auto;
+    }
+
+    .badge strong,
+    .badge span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .badge strong {
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .badge span {
       margin-top: 3px;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
     }
 
-    .status-pill {
-      min-width: 230px;
-      border: 1px solid var(--line);
-      background: #090b0f;
-      padding: 10px 14px;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--accent);
-    }
-
-    .overview {
+    .kpis {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
-    .overview-card {
-      min-height: 86px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(23, 27, 33, 0.9);
-      padding: 14px;
+    .kpi-card,
+    .panel,
+    .info-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: var(--shadow);
     }
 
-    .overview-card span {
+    .kpi-card {
+      min-height: 112px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 13px;
+      align-items: center;
+      padding: 18px;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .kpi-card:hover,
+    .panel:hover,
+    .info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.11);
+    }
+
+    .kpi-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 26px;
+    }
+
+    .kpi-card span {
       display: block;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.04em;
     }
 
-    .overview-card strong {
+    .kpi-card strong {
       display: block;
-      margin-top: 10px;
+      margin-top: 7px;
       color: var(--text);
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 900;
     }
 
-    .overview-card small {
+    .kpi-card small {
       display: block;
       margin-top: 4px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 700;
+      line-height: 1.35;
     }
 
-    .workspace {
+    .dashboard-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 330px;
-      gap: 16px;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
       align-items: start;
     }
 
-    .stage {
-      position: relative;
+    .panel {
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #050608;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0;
+      padding: 18px 20px 0;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .video-frame {
+      position: relative;
+      margin: 16px 18px 18px;
+      border: 4px solid var(--state-color);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0F172A;
       aspect-ratio: 16 / 9;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+      box-shadow: 0 0 0 7px var(--state-soft);
     }
 
     video,
@@ -320,153 +431,297 @@ HTML = """
 
     video { transform: scaleX(-1); }
 
-    .banner {
+    .video-badge,
+    .fps-chip {
       position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 0 22px;
-      background: rgba(0, 0, 0, 0.78);
       z-index: 3;
-      font-size: 24px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 12px;
       font-weight: 900;
-      color: var(--accent);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
     }
 
-    .banner small {
+    .video-badge {
+      top: 14px;
+      left: 14px;
+      gap: 8px;
+      color: var(--state-color);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .video-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--state-color);
+    }
+
+    .fps-chip {
+      top: 14px;
+      right: 14px;
+      color: #FFFFFF;
+      background: rgba(15, 23, 42, 0.76);
+    }
+
+    .engagement-overlay {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(86%, 590px);
+      z-index: 3;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      padding: 13px 18px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    }
+
+    .face-emote {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--state-color);
+      color: #FFFFFF;
+      font-size: 28px;
+      flex: 0 0 auto;
+    }
+
+    .overlay-copy span {
+      display: block;
       color: var(--muted);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .side-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      overflow: hidden;
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+    .overlay-copy strong {
+      display: block;
+      color: var(--state-color);
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 950;
+    }
+
+    .overlay-confidence {
+      min-width: 96px;
+      border-left: 1px solid var(--border);
+      padding-left: 16px;
+    }
+
+    .overlay-confidence span,
+    .overlay-confidence strong {
+      display: block;
+      text-align: center;
+    }
+
+    .overlay-confidence span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .overlay-confidence strong {
+      margin-top: 4px;
+      color: var(--state-color);
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .right-stack {
+      display: grid;
+      gap: 16px;
     }
 
     .panel-section {
-      padding: 16px;
-      border-bottom: 1px solid var(--line);
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
     }
 
     .panel-section:last-child { border-bottom: 0; }
 
     .section-title {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
+      margin: 0 0 14px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 950;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .state-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #0b0f14;
-      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--state-color), white 62%);
+      border-radius: 16px;
+      background: var(--state-soft);
+      padding: 18px;
+    }
+
+    .state-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .state-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--state-color);
+      color: #FFFFFF;
+      font-size: 26px;
     }
 
     .state-label {
-      color: var(--accent);
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.05;
+      color: var(--state-color);
+      font-size: 27px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .state-description {
+      margin: 12px 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 650;
     }
 
     .state-meta {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 14px;
     }
 
     .metric {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel-2);
-      padding: 10px;
-      min-height: 66px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 12px;
+      min-height: 74px;
+    }
+
+    .metric span,
+    .metric strong {
+      display: block;
     }
 
     .metric span {
-      display: block;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
     .metric strong {
-      display: block;
-      margin-top: 6px;
+      margin-top: 7px;
       color: var(--text);
-      font-size: 18px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: 950;
     }
 
     .controls {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
     }
 
     button {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel-2);
-      color: var(--text);
-      min-height: 40px;
-      padding: 0 16px;
+      min-height: 46px;
+      border: 0;
+      border-radius: 12px;
+      color: #FFFFFF;
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
     }
 
-    button:hover { border-color: var(--accent); }
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+    }
 
     .primary {
-      background: var(--accent);
-      color: #041007;
-      border-color: transparent;
+      background: var(--primary);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
+    }
+
+    .danger {
+      background: #FFFFFF;
+      color: var(--sin-rostro);
+      border: 1px solid #FCA5A5;
     }
 
     .hint {
       margin: 12px 0 0;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.35;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
-    .error { color: #fca5a5; }
+    .error { color: var(--sin-rostro); }
 
     .legend {
       display: grid;
-      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
     .legend-row {
       display: grid;
-      grid-template-columns: 14px 1fr;
-      gap: 8px;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 9px;
       align-items: center;
-      min-height: 24px;
-      color: var(--text);
+    }
+
+    .legend-dot {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #FFFFFF;
+      background: var(--dot-color);
       font-size: 14px;
+    }
+
+    .legend-row strong,
+    .legend-row span {
+      display: block;
+    }
+
+    .legend-row strong {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .legend-row span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
       font-weight: 700;
     }
 
     .system-list {
       display: grid;
-      gap: 9px;
+      gap: 10px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -475,7 +730,7 @@ HTML = """
     .system-list li {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 700;
@@ -483,276 +738,325 @@ HTML = """
 
     .system-list strong {
       color: var(--text);
-      font-weight: 800;
       text-align: right;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--dot-color);
-    }
-
-    .insights {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .info-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(23, 27, 33, 0.9);
-      padding: 16px;
-    }
-
-    .pipeline {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .pipeline-step {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #0b0f14;
-      padding: 12px;
-      min-height: 92px;
-    }
-
-    .pipeline-step span {
-      color: var(--accent);
-      font-size: 12px;
       font-weight: 900;
     }
 
-    .pipeline-step strong {
+    .flow-panel {
+      margin-top: 18px;
+      padding: 20px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #FFFFFF;
+      padding: 16px;
+      min-height: 126px;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-weight: 950;
+      font-size: 18px;
+      z-index: 1;
+    }
+
+    .flow-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #FFFFFF;
+      background: var(--primary);
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .flow-step strong,
+    .flow-step span {
       display: block;
-      margin-top: 8px;
+    }
+
+    .flow-step strong {
       color: var(--text);
       font-size: 14px;
+      font-weight: 950;
     }
 
-    .pipeline-step small {
-      display: block;
-      margin-top: 6px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .note {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .app-footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 16px;
+    .flow-step span {
+      margin-top: 5px;
       color: var(--muted);
       font-size: 12px;
+      line-height: 1.35;
       font-weight: 700;
     }
 
-    @media (max-width: 980px) {
-      .workspace { grid-template-columns: 1fr; }
-      .overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .insights { grid-template-columns: 1fr; }
-      .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .education-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
     }
 
-    @media (max-width: 720px) {
-      .shell {
-        width: min(100% - 20px, 1120px);
-        padding: 12px 0;
+    .info-card {
+      padding: 18px;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .info-card .info-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .info-card h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+    .info-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 240px minmax(0, 1fr); }
+      .hero { grid-template-columns: 1fr; }
+      .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
       }
-
-      .topbar { display: block; }
-      .app-nav { height: auto; align-items: flex-start; flex-direction: column; padding: 10px; }
-      .nav-links { width: 100%; overflow-x: auto; }
-      .brand { margin-bottom: 10px; }
-      h1 { font-size: 19px; }
-      .status-pill { width: 100%; }
-      .overview { grid-template-columns: 1fr; }
-      .pipeline { grid-template-columns: 1fr; }
-      .app-footer { display: block; }
-
-      .banner {
-        height: 58px;
-        font-size: 18px;
-        padding: 0 14px;
+      .menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .academic-card { margin-top: 0; }
+      .main { padding: 18px; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-step:not(:last-child)::after { display: none; }
+      .education-grid { grid-template-columns: 1fr; }
+      .engagement-overlay {
+        width: calc(100% - 24px);
+        grid-template-columns: auto minmax(0, 1fr);
       }
+      .overlay-confidence {
+        grid-column: 1 / -1;
+        border-left: 0;
+        border-top: 1px solid var(--border);
+        padding: 10px 0 0;
+      }
+    }
 
-      .banner small { display: none; }
+    @media (max-width: 620px) {
+      .badges,
+      .kpis,
+      .legend,
+      .state-meta,
+      .controls { grid-template-columns: 1fr; }
+      .welcome { align-items: flex-start; }
+      .welcome h2 { font-size: 24px; }
+      .menu { grid-template-columns: 1fr; }
+      .overlay-copy strong { font-size: 22px; }
+      .face-emote { width: 48px; height: 48px; }
     }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <nav class="app-nav" aria-label="Navegacion principal">
-      <div class="nav-links">
-        <a class="nav-item active" href="#monitor">Monitor en vivo</a>
-        <a class="nav-item" href="#arquitectura">Arquitectura</a>
-        <a class="nav-item" href="#entrega">Entrega</a>
-      </div>
-      <div class="deploy-badge">Railway activo</div>
-    </nav>
-
-    <header class="topbar">
+  <div class="app">
+    <aside class="sidebar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <div class="brand-face"><span class="brand-mouth"></span></div>
-        </div>
+        <div class="brand-mark" aria-hidden="true">🎓</div>
         <div>
           <h1>EngageFace Aula</h1>
-          <div class="subtitle">Medidor de engagement facial en aulas virtuales</div>
+          <p>Medidor de engagement facial en aulas virtuales</p>
         </div>
       </div>
-      <div id="statusPill" class="status-pill">CAMARA DETENIDA</div>
-    </header>
 
-    <section class="overview" aria-label="Resumen del sistema">
-      <div class="overview-card">
-        <span>Modelo</span>
-        <strong>Gradient Boosting</strong>
-        <small>Clasificacion multiclase</small>
-      </div>
-      <div class="overview-card">
-        <span>Features</span>
-        <strong>11</strong>
-        <small>Razones geometricas</small>
-      </div>
-      <div class="overview-card">
-        <span>Dataset</span>
-        <strong>9.217</strong>
-        <small>Muestras procesadas</small>
-      </div>
-      <div class="overview-card">
-        <span>Estado</span>
-        <strong id="systemValue">Listo</strong>
-        <small>Inferencia en navegador + backend</small>
-      </div>
-    </section>
+      <nav class="menu" aria-label="Menu principal">
+        <a class="active" href="#dashboard"><span class="menu-icon">🏠</span>Dashboard</a>
+        <a href="#monitor"><span class="menu-icon">👁</span>En tiempo real</a>
+        <a href="#historial"><span class="menu-icon">🕘</span>Historial</a>
+        <a href="#analisis"><span class="menu-icon">📊</span>Análisis</a>
+        <a href="#reportes"><span class="menu-icon">📄</span>Reportes</a>
+        <a href="#configuracion"><span class="menu-icon">⚙</span>Configuración</a>
+        <a href="#informacion"><span class="menu-icon">ⓘ</span>Información</a>
+      </nav>
 
-    <div id="monitor" class="workspace">
-      <section class="stage" aria-label="Camara y deteccion facial">
-        <video id="video" autoplay playsinline muted></video>
-        <canvas id="overlay"></canvas>
-        <div class="banner">
-          <span id="bannerText">Engagement: SIN ROSTRO</span>
-          <small id="frameState">0 FPS</small>
+      <div class="academic-card">
+        <div aria-hidden="true">👥</div>
+        <strong>Proyecto Académico</strong>
+        <span>IA aplicada a la educación</span>
+        <span>Universidad 2025</span>
+      </div>
+    </aside>
+
+    <main id="dashboard" class="main">
+      <header class="hero">
+        <div class="welcome">
+          <div class="welcome-icon" aria-hidden="true">🎓</div>
+          <div>
+            <h2>¡Bienvenido!</h2>
+            <p>Sistema inteligente que analiza expresiones faciales para apoyar el aprendizaje y bienestar del estudiante.</p>
+          </div>
         </div>
+
+        <div class="badges" aria-label="Indicadores rapidos">
+          <div class="badge"><div class="badge-icon">🧠</div><div><strong>IA activa</strong><span>Inferencia en tiempo real</span></div></div>
+          <div class="badge"><div class="badge-icon">📶</div><div><strong>Tiempo real</strong><span>Conectado</span></div></div>
+          <div class="badge"><div class="badge-icon">〽</div><div><strong>FPS</strong><span id="frameState">0 FPS</span></div></div>
+          <div class="badge"><div class="badge-icon">●</div><div><strong>Sistema</strong><span id="systemValue">Listo</span></div></div>
+        </div>
+      </header>
+
+      <section class="kpis" aria-label="Indicadores principales">
+        <article class="kpi-card"><div class="kpi-icon">🧠</div><div><span>Modelo actual</span><strong>Gradient Boosting</strong><small>Clasificación multiclase</small></div></article>
+        <article class="kpi-card"><div class="kpi-icon">⌘</div><div><span>Features utilizadas</span><strong>11</strong><small>Razones geométricas</small></div></article>
+        <article class="kpi-card"><div class="kpi-icon">🗄</div><div><span>Dataset procesado</span><strong>9,217</strong><small>Muestras analizadas</small></div></article>
+        <article class="kpi-card"><div class="kpi-icon">🛡</div><div><span>Estado del sistema</span><strong id="kpiSystemValue">Activo</strong><small>Todo funcionando correctamente</small></div></article>
       </section>
 
-      <aside class="side-panel" aria-label="Panel de analitica">
-        <section class="panel-section">
-          <h2 class="section-title">Estado actual</h2>
-          <div class="state-card">
-            <div id="stateLabel" class="state-label">SIN ROSTRO</div>
-            <div class="state-meta">
-              <div class="metric">
-                <span>Confianza</span>
-                <strong id="confidenceValue">--</strong>
+      <div class="dashboard-grid">
+        <section id="monitor" class="panel" aria-label="Monitoreo en tiempo real">
+          <h2 class="panel-title">📹 Monitoreo en tiempo real</h2>
+          <div id="videoFrame" class="video-frame">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div id="faceBadge" class="video-badge">SIN ROSTRO</div>
+            <div class="fps-chip" id="fpsChip">0 FPS</div>
+            <div class="engagement-overlay">
+              <div id="faceEmote" class="face-emote">🙂</div>
+              <div class="overlay-copy">
+                <span>Engagement</span>
+                <strong id="overlayLabel">SIN ROSTRO</strong>
               </div>
-              <div class="metric">
-                <span>Rostro</span>
-                <strong id="faceValue">No</strong>
+              <div class="overlay-confidence">
+                <span>Confianza</span>
+                <strong id="overlayConfidence">--</strong>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="panel-section">
-          <h2 class="section-title">Controles</h2>
-          <div class="controls">
-            <button id="startBtn" class="primary" type="button">Iniciar camara</button>
-            <button id="stopBtn" type="button">Detener</button>
-          </div>
-          <p id="hint" class="hint">Sistema listo para iniciar.</p>
-        </section>
+        <aside class="right-stack" aria-label="Panel derecho">
+          <section class="panel">
+            <div class="panel-section">
+              <h2 class="section-title">Estado actual</h2>
+              <div class="state-card">
+                <div class="state-heading">
+                  <div id="stateIcon" class="state-icon">🙂</div>
+                  <div id="stateLabel" class="state-label">SIN ROSTRO</div>
+                </div>
+                <p id="stateDescription" class="state-description">No se detecta un rostro frente a la cámara.</p>
+                <div class="state-meta">
+                  <div class="metric"><span>Confianza</span><strong id="confidenceValue">--</strong></div>
+                  <div class="metric"><span>Rostro</span><strong id="faceValue">No</strong></div>
+                </div>
+              </div>
+            </div>
 
-        <section class="panel-section">
-          <h2 class="section-title">Clases</h2>
-          <div class="legend">
-            <div class="legend-row"><span class="dot" style="--dot-color:#22c55e"></span>Concentrado</div>
-            <div class="legend-row"><span class="dot" style="--dot-color:#f97316"></span>Confundido</div>
-            <div class="legend-row"><span class="dot" style="--dot-color:#9ca3af"></span>Aburrido</div>
-            <div class="legend-row"><span class="dot" style="--dot-color:#fde047"></span>Sorprendido</div>
-          </div>
-        </section>
+            <div class="panel-section">
+              <h2 class="section-title">Controles</h2>
+              <div class="controls">
+                <button id="startBtn" class="primary" type="button">📹 Iniciar cámara</button>
+                <button id="stopBtn" class="danger" type="button">■ Detener</button>
+              </div>
+              <p id="hint" class="hint">Sistema listo para iniciar.</p>
+            </div>
+          </section>
 
-        <section class="panel-section">
-          <h2 class="section-title">Sistema</h2>
-          <ul class="system-list">
-            <li><span>Backend</span><strong>Flask + Gunicorn</strong></li>
-            <li><span>Vision</span><strong>MediaPipe FaceMesh</strong></li>
-            <li><span>Deploy</span><strong>Railway</strong></li>
-          </ul>
-        </section>
-      </aside>
-    </div>
+          <section class="panel">
+            <div class="panel-section">
+              <h2 class="section-title">Leyenda de estados</h2>
+              <div class="legend">
+                <div class="legend-row"><span class="legend-dot" style="--dot-color:#22C55E">🙂</span><div><strong>Concentrado</strong><span>Atento y enfocado</span></div></div>
+                <div class="legend-row"><span class="legend-dot" style="--dot-color:#F97316">🤔</span><div><strong>Confundido</strong><span>Duda o dificultad</span></div></div>
+                <div class="legend-row"><span class="legend-dot" style="--dot-color:#9CA3AF">😐</span><div><strong>Aburrido</strong><span>Poca estimulación</span></div></div>
+                <div class="legend-row"><span class="legend-dot" style="--dot-color:#EAB308">😮</span><div><strong>Sorprendido</strong><span>Alta sorpresa</span></div></div>
+              </div>
+            </div>
 
-    <section id="arquitectura" class="insights" aria-label="Arquitectura del sistema">
-      <div class="info-panel">
-        <h2 class="section-title">Flujo de inferencia</h2>
-        <div class="pipeline">
-          <div class="pipeline-step">
-            <span>01</span>
-            <strong>Camara web</strong>
-            <small>El navegador captura frames con permiso del usuario.</small>
-          </div>
-          <div class="pipeline-step">
-            <span>02</span>
-            <strong>FaceMesh</strong>
-            <small>MediaPipe ubica landmarks de ojos, boca y cejas.</small>
-          </div>
-          <div class="pipeline-step">
-            <span>03</span>
-            <strong>Features</strong>
-            <small>Se calculan aperturas, simetrias y posiciones normalizadas.</small>
-          </div>
-          <div class="pipeline-step">
-            <span>04</span>
-            <strong>Prediccion</strong>
-            <small>El modelo entrega el estado de engagement en tiempo real.</small>
-          </div>
+            <div class="panel-section">
+              <h2 class="section-title">Sistema</h2>
+              <ul class="system-list">
+                <li><span>Backend</span><strong>Flask + Gunicorn</strong></li>
+                <li><span>Visión por computadora</span><strong>MediaPipe FaceMesh</strong></li>
+                <li><span>Deployment</span><strong>Railway</strong></li>
+                <li><span>Versión</span><strong>1.0.0</strong></li>
+              </ul>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <section id="analisis" class="panel flow-panel">
+        <h2 class="section-title">¿Cómo funciona el sistema?</h2>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-icon">📹</div><strong>1. Captura</strong><span>Webcam en tiempo real</span></div>
+          <div class="flow-step"><div class="flow-icon">🧩</div><strong>2. Detección</strong><span>FaceMesh 468 puntos</span></div>
+          <div class="flow-step"><div class="flow-icon">⚙</div><strong>3. Extracción</strong><span>11 razones geométricas</span></div>
+          <div class="flow-step"><div class="flow-icon">🧠</div><strong>4. Predicción</strong><span>Modelo de ML entrenado</span></div>
+          <div class="flow-step"><div class="flow-icon">📈</div><strong>5. Resultado</strong><span>Estado de engagement</span></div>
         </div>
-      </div>
+      </section>
 
-      <div id="entrega" class="info-panel">
-        <h2 class="section-title">Uso academico</h2>
-        <p class="note">
-          La aplicacion esta orientada a aulas virtuales y puede complementar plataformas de videoconferencia
-          con senales agregadas de atencion. El uso responsable requiere consentimiento, privacidad y no almacenar
-          imagenes faciales sin autorizacion.
-        </p>
-      </div>
-    </section>
+      <section id="informacion" class="education-grid">
+        <article class="info-card"><div class="info-icon">📘</div><h3>Uso educativo</h3><p>Esta herramienta ayuda a docentes a identificar patrones de engagement y mejorar estrategias pedagógicas.</p></article>
+        <article class="info-card"><div class="info-icon">🛡</div><h3>Ética y privacidad</h3><p>Los datos se procesan en tiempo real y no se almacenan imágenes ni información personal.</p></article>
+        <article class="info-card"><div class="info-icon">ⓘ</div><h3>Nota importante</h3><p>Este sistema es un apoyo al docente, no reemplaza su criterio profesional.</p></article>
+      </section>
 
-    <footer class="app-footer">
-      <span>Proyecto 2 - Medidor de Engagement Facial</span>
-      <span>FER2013 + MediaPipe FaceMesh + Machine Learning</span>
-    </footer>
-
-    <canvas id="capture" style="display:none;"></canvas>
-  </main>
+      <canvas id="capture" style="display:none;"></canvas>
+    </main>
+  </div>
 
   <script>
     const video = document.getElementById("video");
     const overlay = document.getElementById("overlay");
     const capture = document.getElementById("capture");
-    const bannerText = document.getElementById("bannerText");
-    const statusPill = document.getElementById("statusPill");
+    const overlayLabel = document.getElementById("overlayLabel");
+    const overlayConfidence = document.getElementById("overlayConfidence");
+    const faceBadge = document.getElementById("faceBadge");
+    const fpsChip = document.getElementById("fpsChip");
+    const videoFrame = document.getElementById("videoFrame");
+    const faceEmote = document.getElementById("faceEmote");
+    const stateIcon = document.getElementById("stateIcon");
     const stateLabel = document.getElementById("stateLabel");
+    const stateDescription = document.getElementById("stateDescription");
     const confidenceValue = document.getElementById("confidenceValue");
     const faceValue = document.getElementById("faceValue");
     const frameState = document.getElementById("frameState");
     const systemValue = document.getElementById("systemValue");
+    const kpiSystemValue = document.getElementById("kpiSystemValue");
     const hint = document.getElementById("hint");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
@@ -760,11 +1064,33 @@ HTML = """
     const overlayCtx = overlay.getContext("2d");
     const captureCtx = capture.getContext("2d");
     const colorMap = {
-      "concentrado": "#22c55e",
-      "confundido": "#f97316",
-      "aburrido": "#9ca3af",
-      "sorprendido": "#fde047",
-      "sin rostro": "#ef4444"
+      "concentrado": "#22C55E",
+      "confundido": "#F97316",
+      "aburrido": "#9CA3AF",
+      "sorprendido": "#EAB308",
+      "sin rostro": "#EF4444"
+    };
+    const stateConfig = {
+      "concentrado": {
+        icon: "🙂",
+        description: "El estudiante muestra señales de atención y enfoque en la actividad."
+      },
+      "confundido": {
+        icon: "🤔",
+        description: "El estudiante podría presentar duda o dificultad con el contenido."
+      },
+      "aburrido": {
+        icon: "😐",
+        description: "El estudiante muestra baja estimulación o poco interés visual."
+      },
+      "sorprendido": {
+        icon: "😮",
+        description: "El estudiante presenta una reacción de alta sorpresa."
+      },
+      "sin rostro": {
+        icon: "🙂",
+        description: "No se detecta un rostro frente a la cámara."
+      }
     };
 
     let stream = null;
@@ -776,26 +1102,32 @@ HTML = """
 
     function setStatus(label, color) {
       const upper = label.toUpperCase();
-      bannerText.textContent = `Engagement: ${upper}`;
-      statusPill.textContent = upper;
+      const config = stateConfig[label] || stateConfig["sin rostro"];
+      overlayLabel.textContent = upper;
       stateLabel.textContent = upper;
-      bannerText.style.color = color;
-      statusPill.style.color = color;
+      stateDescription.textContent = config.description;
+      faceEmote.textContent = config.icon;
+      stateIcon.textContent = config.icon;
+      faceBadge.textContent = label === "sin rostro" ? "SIN ROSTRO" : "ROSTRO DETECTADO";
       stateLabel.style.color = color;
-      document.documentElement.style.setProperty("--accent", color);
+      document.documentElement.style.setProperty("--state-color", color);
+      document.documentElement.style.setProperty("--state-soft", `${color}1F`);
+      videoFrame.style.borderColor = color;
     }
 
     function setConfidence(value) {
-      confidenceValue.textContent = value === null || value === undefined
-        ? "--"
-        : `${Math.round(value * 100)}%`;
+      const text = value === null || value === undefined ? "--" : `${Math.round(value * 100)}%`;
+      confidenceValue.textContent = text;
+      overlayConfidence.textContent = text;
     }
 
     function tickFps() {
       frames += 1;
       const now = performance.now();
       if (now - lastFpsTime >= 1000) {
-        frameState.textContent = `${frames} FPS`;
+        const fpsText = `${frames} FPS`;
+        frameState.textContent = fpsText;
+        fpsChip.textContent = fpsText;
         frames = 0;
         lastFpsTime = now;
       }
@@ -876,6 +1208,7 @@ HTML = """
         setConfidence(data.confidence);
         faceValue.textContent = data.points && data.points.length ? "Si" : "No";
         systemValue.textContent = data.points && data.points.length ? "Activo" : "Buscando";
+        kpiSystemValue.textContent = data.points && data.points.length ? "Activo" : "Buscando";
         tickFps();
 
         if (data.confidence !== null && data.confidence !== undefined) {
@@ -913,6 +1246,7 @@ HTML = """
         hint.textContent = "El navegador no pudo acceder a la camara.";
         hint.classList.add("error");
         systemValue.textContent = "Permiso";
+        kpiSystemValue.textContent = "Permiso";
       }
     }
 
@@ -930,8 +1264,10 @@ HTML = """
       setConfidence(null);
       faceValue.textContent = "No";
       frameState.textContent = "0 FPS";
+      fpsChip.textContent = "0 FPS";
       systemValue.textContent = "Listo";
-      statusPill.textContent = "CAMARA DETENIDA";
+      kpiSystemValue.textContent = "Activo";
+      faceBadge.textContent = "SIN ROSTRO";
       hint.textContent = "Sistema listo para iniciar.";
     }
 
