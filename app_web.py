@@ -13,13 +13,14 @@ Aplicacion web funcional:
 from threading import Lock
 from pathlib import Path
 import base64
+from io import BytesIO
 import os
 import tempfile
 
-import cv2
 from flask import Flask, Response, jsonify, render_template_string, request
 import numpy as np
 import pandas as pd
+from PIL import Image
 
 MPL_CACHE_DIR = Path(tempfile.gettempdir()) / f"engagement_facial_web_mpl_{os.getpid()}"
 MPL_CACHE_DIR.mkdir(exist_ok=True)
@@ -27,12 +28,12 @@ os.environ.setdefault("MPLCONFIGDIR", str(MPL_CACHE_DIR))
 
 import mediapipe as mp
 
-import demo_webcam
+import engagement_core
 
 
 app = Flask(__name__)
 
-modelo, scaler, columnas_features = demo_webcam.cargar_recursos_modelo()
+modelo, scaler, columnas_features = engagement_core.cargar_recursos_modelo()
 face_mesh_lock = Lock()
 face_mesh = mp.solutions.face_mesh.FaceMesh(
     static_image_mode=False,
@@ -656,14 +657,14 @@ def decode_image(data_url):
     if "," in data_url:
         data_url = data_url.split(",", 1)[1]
     image_bytes = base64.b64decode(data_url)
-    image_array = np.frombuffer(image_bytes, dtype=np.uint8)
-    return cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
+    return np.array(image)
 
 
 def landmark_points(landmarks, width, height):
     points = []
-    for index in demo_webcam.LANDMARKS_TO_DRAW:
-        point = demo_webcam.punto_landmark(landmarks, index, width, height)
+    for index in engagement_core.LANDMARKS_TO_DRAW:
+        point = engagement_core.punto_landmark(landmarks, index, width, height)
         points.append({"x": float(point[0]), "y": float(point[1])})
     return points
 
@@ -676,10 +677,10 @@ def predict_label_and_confidence(features):
         features_scaled = scaler.transform(df_features)
         probabilities = modelo.predict_proba(features_scaled)[0]
         best_index = int(np.argmax(probabilities))
-        label = demo_webcam.normalizar_etiqueta(modelo.classes_[best_index])
+        label = engagement_core.normalizar_etiqueta(modelo.classes_[best_index])
         return label, float(probabilities[best_index])
 
-    label = demo_webcam.predecir_engagement(modelo, scaler, columnas_features, features)
+    label = engagement_core.predecir_engagement(modelo, scaler, columnas_features, features)
     return label, None
 
 
@@ -719,7 +720,7 @@ def predict():
         )
 
     height, width = frame.shape[:2]
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame_rgb = frame
 
     with face_mesh_lock:
         results = face_mesh.process(frame_rgb)
@@ -729,7 +730,7 @@ def predict():
     points = []
     if results.multi_face_landmarks:
         landmarks = results.multi_face_landmarks[0].landmark
-        features = demo_webcam.calcular_features(landmarks, width, height)
+        features = engagement_core.calcular_features(landmarks, width, height)
         label, confidence = predict_label_and_confidence(features)
         points = landmark_points(landmarks, width, height)
 
