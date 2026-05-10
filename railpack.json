@@ -4,7 +4,14 @@
     "python": "3.11.9"
   },
   "deploy": {
-    "aptPackages": ["libxcb1"],
+    "aptPackages": [
+      "libxcb1",
+      "libgl1",
+      "libglib2.0-0",
+      "libsm6",
+      "libxext6",
+      "libxrender1"
+    ],
     "startCommand": "gunicorn app_web:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120"
   }
 }
