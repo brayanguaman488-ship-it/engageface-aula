@@ -813,6 +813,13 @@ HTML = """
       margin-top: 18px;
     }
 
+    .management-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
     .info-card {
       padding: 18px;
       transition: transform 180ms ease, box-shadow 180ms ease;
@@ -845,6 +852,30 @@ HTML = """
       font-weight: 650;
     }
 
+    .mini-list {
+      display: grid;
+      gap: 9px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mini-list strong {
+      color: var(--primary);
+      font-weight: 900;
+      text-align: right;
+    }
+
     @media (max-width: 1180px) {
       .app { grid-template-columns: 240px minmax(0, 1fr); }
       .hero { grid-template-columns: 1fr; }
@@ -865,6 +896,7 @@ HTML = """
       .flow { grid-template-columns: 1fr; }
       .flow-step:not(:last-child)::after { display: none; }
       .education-grid { grid-template-columns: 1fr; }
+      .management-grid { grid-template-columns: 1fr; }
       .engagement-overlay {
         width: calc(100% - 24px);
         grid-template-columns: auto minmax(0, 1fr);
@@ -916,7 +948,7 @@ HTML = """
         <div aria-hidden="true">👥</div>
         <strong>Proyecto Académico</strong>
         <span>IA aplicada a la educación</span>
-        <span>Universidad 2025</span>
+        <span>Universidad 2026</span>
       </div>
     </aside>
 
@@ -1033,6 +1065,38 @@ HTML = """
         <article class="info-card"><div class="info-icon">📘</div><h3>Uso educativo</h3><p>Esta herramienta ayuda a docentes a identificar patrones de engagement y mejorar estrategias pedagógicas.</p></article>
         <article class="info-card"><div class="info-icon">🛡</div><h3>Ética y privacidad</h3><p>Los datos se procesan en tiempo real y no se almacenan imágenes ni información personal.</p></article>
         <article class="info-card"><div class="info-icon">ⓘ</div><h3>Nota importante</h3><p>Este sistema es un apoyo al docente, no reemplaza su criterio profesional.</p></article>
+      </section>
+
+      <section class="management-grid" aria-label="Modulos complementarios">
+        <article id="historial" class="info-card">
+          <div class="info-icon">🕘</div>
+          <h3>Historial</h3>
+          <p>Resumen académico de la sesión actual para apoyar la observación docente.</p>
+          <ul class="mini-list">
+            <li><span>Modo</span><strong>Tiempo real</strong></li>
+            <li><span>Almacenamiento</span><strong>No guarda imágenes</strong></li>
+          </ul>
+        </article>
+
+        <article id="reportes" class="info-card">
+          <div class="info-icon">📄</div>
+          <h3>Reportes</h3>
+          <p>Vista preparada para presentar resultados del proyecto y evidencias de funcionamiento.</p>
+          <ul class="mini-list">
+            <li><span>Video demo</span><strong>30 segundos</strong></li>
+            <li><span>Entrega</span><strong>Informe técnico</strong></li>
+          </ul>
+        </article>
+
+        <article id="configuracion" class="info-card">
+          <div class="info-icon">⚙</div>
+          <h3>Configuración</h3>
+          <p>Parámetros del sistema definidos para una inferencia estable durante la presentación.</p>
+          <ul class="mini-list">
+            <li><span>Suavizado</span><strong>7 frames</strong></li>
+            <li><span>Modelo activo</span><strong>Gradient Boosting</strong></li>
+          </ul>
+        </article>
       </section>
 
       <canvas id="capture" style="display:none;"></canvas>
@@ -1273,6 +1337,12 @@ HTML = """
 
     startBtn.addEventListener("click", startCamera);
     stopBtn.addEventListener("click", stopCamera);
+    document.querySelectorAll(".menu a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".menu a").forEach((item) => item.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
   </script>
