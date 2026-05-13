@@ -668,6 +668,19 @@ HTML = """
       border: 1px solid #FCA5A5;
     }
 
+    .secondary {
+      grid-column: 1 / -1;
+      background: #0F172A;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+      transform: none;
+      filter: none;
+    }
+
     .hint {
       margin: 12px 0 0;
       color: var(--muted);
@@ -740,6 +753,37 @@ HTML = """
       color: var(--text);
       text-align: right;
       font-weight: 900;
+    }
+
+    .system-toggle {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #FFFFFF;
+      color: var(--primary);
+      padding: 0 12px;
+      box-shadow: none;
+    }
+
+    .system-toggle span {
+      font-size: 13px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .system-details {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .system-details.open {
+      display: block;
     }
 
     .flow-panel {
@@ -874,6 +918,103 @@ HTML = """
       color: var(--primary);
       font-weight: 900;
       text-align: right;
+    }
+
+    .progress-shell {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #E2E8F0;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--primary);
+      transition: width 180ms ease;
+    }
+
+    .percent-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .percent-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #FFFFFF;
+      padding: 12px;
+    }
+
+    .percent-card span,
+    .percent-card strong {
+      display: block;
+    }
+
+    .percent-card span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .percent-card strong {
+      margin-top: 6px;
+      color: var(--text);
+      font-size: 21px;
+      font-weight: 950;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      max-height: 245px;
+      overflow: auto;
+    }
+
+    .history-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #FFFFFF;
+      padding: 12px;
+    }
+
+    .history-item strong,
+    .history-item span {
+      display: block;
+    }
+
+    .history-item strong {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .history-item span {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .report-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #F8FAFC;
+      color: var(--text);
+      margin-top: 14px;
+      min-height: 132px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 700;
+      white-space: pre-line;
     }
 
     @media (max-width: 1180px) {
@@ -1021,6 +1162,10 @@ HTML = """
               <div class="controls">
                 <button id="startBtn" class="primary" type="button">📹 Iniciar cámara</button>
                 <button id="stopBtn" class="danger" type="button">■ Detener</button>
+                <button id="evaluateBtn" class="secondary" type="button">Iniciar evaluación de 10 segundos</button>
+              </div>
+              <div class="progress-shell" aria-label="Progreso de evaluacion">
+                <div id="evaluationProgress" class="progress-bar"></div>
               </div>
               <p id="hint" class="hint">Sistema listo para iniciar.</p>
             </div>
@@ -1038,13 +1183,19 @@ HTML = """
             </div>
 
             <div class="panel-section">
-              <h2 class="section-title">Sistema</h2>
-              <ul class="system-list">
-                <li><span>Backend</span><strong>Flask + Gunicorn</strong></li>
-                <li><span>Visión por computadora</span><strong>MediaPipe FaceMesh</strong></li>
-                <li><span>Deployment</span><strong>Railway</strong></li>
-                <li><span>Versión</span><strong>1.0.0</strong></li>
-              </ul>
+              <button id="systemToggle" class="system-toggle" type="button" aria-expanded="false">
+                <span>Sistema</span>
+                <strong id="systemToggleIcon">+</strong>
+              </button>
+              <div id="systemDetails" class="system-details">
+                <ul class="system-list">
+                  <li><span>Backend</span><strong>Flask + Gunicorn</strong></li>
+                  <li><span>Visión por computadora</span><strong>MediaPipe FaceMesh</strong></li>
+                  <li><span>Evaluación</span><strong>Ventana de 10 s</strong></li>
+                  <li><span>Deployment</span><strong>Railway</strong></li>
+                  <li><span>Versión</span><strong>1.1.0</strong></li>
+                </ul>
+              </div>
             </div>
           </section>
         </aside>
@@ -1071,31 +1222,46 @@ HTML = """
         <article id="historial" class="info-card">
           <div class="info-icon">🕘</div>
           <h3>Historial</h3>
-          <p>Resumen académico de la sesión actual para apoyar la observación docente.</p>
+          <p>Evaluaciones realizadas durante la sesión actual del navegador.</p>
           <ul class="mini-list">
-            <li><span>Modo</span><strong>Tiempo real</strong></li>
-            <li><span>Almacenamiento</span><strong>No guarda imágenes</strong></li>
+            <li><span>Evaluaciones</span><strong id="historyCount">0</strong></li>
+            <li><span>Ultimo estado</span><strong id="historyLast">Sin datos</strong></li>
           </ul>
+          <div id="historyList" class="history-list">
+            <div class="history-item">
+              <strong>Sin evaluaciones todavia</strong>
+              <span>Inicia la camara y ejecuta una evaluacion de 10 segundos.</span>
+            </div>
+          </div>
         </article>
 
         <article id="reportes" class="info-card">
           <div class="info-icon">📄</div>
           <h3>Reportes</h3>
-          <p>Vista preparada para presentar resultados del proyecto y evidencias de funcionamiento.</p>
+          <p>Informe breve de la ultima evaluación para entregar como evidencia estudiantil.</p>
           <ul class="mini-list">
-            <li><span>Video demo</span><strong>30 segundos</strong></li>
-            <li><span>Entrega</span><strong>Informe técnico</strong></li>
+            <li><span>Ventana</span><strong>10 segundos</strong></li>
+            <li><span>Resultado</span><strong id="reportDominant">Pendiente</strong></li>
           </ul>
+          <div id="reportText" class="report-box">Aun no hay informe. Ejecuta una evaluacion para generar porcentajes del estudiante.</div>
         </article>
 
         <article id="configuracion" class="info-card">
           <div class="info-icon">⚙</div>
-          <h3>Configuración</h3>
-          <p>Parámetros del sistema definidos para una inferencia estable durante la presentación.</p>
+          <h3>Evaluación</h3>
+          <p>Porcentajes calculados sobre la ventana de clase sin almacenar imagenes.</p>
           <ul class="mini-list">
-            <li><span>Suavizado</span><strong>7 frames</strong></li>
-            <li><span>Modelo activo</span><strong>Gradient Boosting</strong></li>
+            <li><span>Duración</span><strong id="evaluationWindowText">10 s</strong></li>
+            <li><span>Muestras</span><strong id="sampleCount">0</strong></li>
           </ul>
+          <div class="percent-grid">
+            <div class="percent-card"><span>Concentrado</span><strong id="pctConcentrado">0%</strong></div>
+            <div class="percent-card"><span>Confundido</span><strong id="pctConfundido">0%</strong></div>
+            <div class="percent-card"><span>Aburrido</span><strong id="pctAburrido">0%</strong></div>
+            <div class="percent-card"><span>Sorprendido</span><strong id="pctSorprendido">0%</strong></div>
+            <div class="percent-card"><span>Sin rostro</span><strong id="pctSinRostro">0%</strong></div>
+            <div class="percent-card"><span>Dominante</span><strong id="dominantState">--</strong></div>
+          </div>
         </article>
       </section>
 
@@ -1124,6 +1290,23 @@ HTML = """
     const hint = document.getElementById("hint");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
+    const evaluateBtn = document.getElementById("evaluateBtn");
+    const evaluationProgress = document.getElementById("evaluationProgress");
+    const sampleCount = document.getElementById("sampleCount");
+    const pctConcentrado = document.getElementById("pctConcentrado");
+    const pctConfundido = document.getElementById("pctConfundido");
+    const pctAburrido = document.getElementById("pctAburrido");
+    const pctSorprendido = document.getElementById("pctSorprendido");
+    const pctSinRostro = document.getElementById("pctSinRostro");
+    const dominantState = document.getElementById("dominantState");
+    const historyCount = document.getElementById("historyCount");
+    const historyLast = document.getElementById("historyLast");
+    const historyList = document.getElementById("historyList");
+    const reportDominant = document.getElementById("reportDominant");
+    const reportText = document.getElementById("reportText");
+    const systemToggle = document.getElementById("systemToggle");
+    const systemToggleIcon = document.getElementById("systemToggleIcon");
+    const systemDetails = document.getElementById("systemDetails");
 
     const overlayCtx = overlay.getContext("2d");
     const captureCtx = capture.getContext("2d");
@@ -1163,6 +1346,13 @@ HTML = """
     let labelHistory = [];
     let frames = 0;
     let lastFpsTime = performance.now();
+    let evaluating = false;
+    let evaluationStartedAt = null;
+    let evaluationTimer = null;
+    let evaluationSamples = [];
+    let reports = [];
+    const evaluationDurationMs = 10000;
+    const reportLabels = ["concentrado", "confundido", "aburrido", "sorprendido", "sin rostro"];
 
     function setStatus(label, color) {
       const upper = label.toUpperCase();
@@ -1183,6 +1373,145 @@ HTML = """
       const text = value === null || value === undefined ? "--" : `${Math.round(value * 100)}%`;
       confidenceValue.textContent = text;
       overlayConfidence.textContent = text;
+    }
+
+    function formatLabel(label) {
+      return label
+        .split(" ")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ");
+    }
+
+    function emptyCounts() {
+      return reportLabels.reduce((acc, label) => {
+        acc[label] = 0;
+        return acc;
+      }, {});
+    }
+
+    function summarizeSamples(samples) {
+      const counts = emptyCounts();
+      for (const item of samples) {
+        counts[item.label] = (counts[item.label] || 0) + 1;
+      }
+
+      const total = samples.length || 0;
+      const percentages = {};
+      for (const label of reportLabels) {
+        percentages[label] = total ? Math.round((counts[label] / total) * 100) : 0;
+      }
+
+      const dominant = reportLabels
+        .filter((label) => label !== "sin rostro")
+        .sort((a, b) => percentages[b] - percentages[a])[0] || "sin rostro";
+      const finalDominant = total && percentages[dominant] > 0 ? dominant : "sin rostro";
+
+      return { counts, percentages, total, dominant: finalDominant };
+    }
+
+    function updatePercentCards(summary) {
+      pctConcentrado.textContent = `${summary.percentages.concentrado}%`;
+      pctConfundido.textContent = `${summary.percentages.confundido}%`;
+      pctAburrido.textContent = `${summary.percentages.aburrido}%`;
+      pctSorprendido.textContent = `${summary.percentages.sorprendido}%`;
+      pctSinRostro.textContent = `${summary.percentages["sin rostro"]}%`;
+      dominantState.textContent = summary.total ? formatLabel(summary.dominant) : "--";
+      sampleCount.textContent = summary.total;
+    }
+
+    function buildReport(summary) {
+      if (!summary.total) {
+        return "No se capturaron muestras suficientes durante la ventana de evaluación.";
+      }
+
+      const focus = summary.percentages.concentrado;
+      let reading = "El estudiante requiere seguimiento docente durante la actividad.";
+      if (focus >= 60) {
+        reading = "El estudiante mantuvo una respuesta visual mayormente atenta durante la evaluación.";
+      } else if (summary.percentages.confundido >= 35) {
+        reading = "Se observaron señales de posible duda; conviene reforzar la explicación o abrir preguntas.";
+      } else if (summary.percentages.aburrido >= 35) {
+        reading = "Se observaron señales de baja estimulación; conviene variar la dinámica de clase.";
+      } else if (summary.percentages["sin rostro"] >= 40) {
+        reading = "La medición tuvo baja presencia frente a cámara; el resultado debe interpretarse con cautela.";
+      }
+
+      return `Informe de evaluación estudiantil
+Ventana analizada: 10 segundos
+Estado dominante: ${formatLabel(summary.dominant)}
+Concentrado: ${summary.percentages.concentrado}%
+Confundido: ${summary.percentages.confundido}%
+Aburrido: ${summary.percentages.aburrido}%
+Sorprendido: ${summary.percentages.sorprendido}%
+Sin rostro: ${summary.percentages["sin rostro"]}%
+
+Lectura docente: ${reading}`;
+    }
+
+    function renderHistory() {
+      historyCount.textContent = reports.length;
+      if (!reports.length) return;
+
+      historyLast.textContent = formatLabel(reports[0].dominant);
+      historyList.innerHTML = reports
+        .slice(0, 6)
+        .map((report) => `
+          <div class="history-item">
+            <strong>${report.time} - ${formatLabel(report.dominant)}</strong>
+            <span>Concentrado ${report.percentages.concentrado}% · Confundido ${report.percentages.confundido}% · Aburrido ${report.percentages.aburrido}% · Sorprendido ${report.percentages.sorprendido}% · Sin rostro ${report.percentages["sin rostro"]}%</span>
+          </div>
+        `)
+        .join("");
+    }
+
+    function finishEvaluation() {
+      evaluating = false;
+      window.clearInterval(evaluationTimer);
+      evaluationTimer = null;
+      evaluationProgress.style.width = "100%";
+      evaluateBtn.disabled = false;
+      evaluateBtn.textContent = "Iniciar evaluación de 10 segundos";
+
+      const summary = summarizeSamples(evaluationSamples);
+      updatePercentCards(summary);
+      const now = new Date();
+      const report = {
+        ...summary,
+        time: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+      };
+      reports.unshift(report);
+      reportDominant.textContent = summary.total ? formatLabel(summary.dominant) : "Sin datos";
+      reportText.textContent = buildReport(summary);
+      renderHistory();
+      hint.textContent = "Evaluación finalizada. Informe generado con porcentajes del estudiante.";
+      hint.classList.remove("error");
+    }
+
+    function startEvaluation() {
+      evaluationSamples = [];
+      evaluationStartedAt = performance.now();
+      evaluating = true;
+      evaluateBtn.disabled = true;
+      evaluateBtn.textContent = "Evaluando clase...";
+      evaluationProgress.style.width = "0%";
+      hint.textContent = "Evaluación de 10 segundos en curso.";
+      hint.classList.remove("error");
+
+      evaluationTimer = window.setInterval(() => {
+        const elapsed = performance.now() - evaluationStartedAt;
+        const progress = Math.min(100, Math.round((elapsed / evaluationDurationMs) * 100));
+        evaluationProgress.style.width = `${progress}%`;
+        if (elapsed >= evaluationDurationMs) finishEvaluation();
+      }, 120);
+    }
+
+    async function handleEvaluationClick() {
+      if (evaluating) return;
+      if (!stream) {
+        await startCamera();
+      }
+      if (!stream) return;
+      startEvaluation();
     }
 
     function tickFps() {
@@ -1270,6 +1599,14 @@ HTML = """
 
         setStatus(stableLabel, stableColor);
         setConfidence(data.confidence);
+        if (evaluating) {
+          evaluationSamples.push({
+            label: stableLabel,
+            confidence: data.confidence,
+            hasFace: Boolean(data.points && data.points.length)
+          });
+          updatePercentCards(summarizeSamples(evaluationSamples));
+        }
         faceValue.textContent = data.points && data.points.length ? "Si" : "No";
         systemValue.textContent = data.points && data.points.length ? "Activo" : "Buscando";
         kpiSystemValue.textContent = data.points && data.points.length ? "Activo" : "Buscando";
@@ -1295,6 +1632,7 @@ HTML = """
     }
 
     async function startCamera() {
+      if (stream) return;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
@@ -1315,6 +1653,7 @@ HTML = """
     }
 
     function stopCamera() {
+      if (evaluating) finishEvaluation();
       if (timer) window.clearInterval(timer);
       timer = null;
       if (stream) {
@@ -1337,6 +1676,12 @@ HTML = """
 
     startBtn.addEventListener("click", startCamera);
     stopBtn.addEventListener("click", stopCamera);
+    evaluateBtn.addEventListener("click", handleEvaluationClick);
+    systemToggle.addEventListener("click", () => {
+      const isOpen = systemDetails.classList.toggle("open");
+      systemToggle.setAttribute("aria-expanded", String(isOpen));
+      systemToggleIcon.textContent = isOpen ? "-" : "+";
+    });
     document.querySelectorAll(".menu a").forEach((link) => {
       link.addEventListener("click", () => {
         document.querySelectorAll(".menu a").forEach((item) => item.classList.remove("active"));
