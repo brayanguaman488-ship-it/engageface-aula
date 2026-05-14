@@ -33,16 +33,16 @@ def balancear_por_submuestreo(df, target_col):
     partes = []
     for _, grupo in df.groupby(target_col):
         partes.append(grupo.sample(n=menor_clase, random_state=RANDOM_STATE))
-    return pd.concat(partes).sample(frac=1, random_state=RANDOM_STATE).reset_index(drop=True)
+    return pd.concat(partes).reset_index(drop=True)
 
 
-def evaluar_modelo(nombre, pipeline, x_train, x_test, y_train, y_test):
+def evaluar_modelo(nombre, pipeline, x, y, x_train, x_test, y_train, y_test):
     pipeline.fit(x_train, y_train)
     pred = pipeline.predict(x_test)
     cv_scores = cross_val_score(
         pipeline,
-        x_train,
-        y_train,
+        x,
+        y,
         cv=5,
         scoring="f1_macro",
         n_jobs=1,
@@ -138,9 +138,8 @@ def main():
                     (
                         "model",
                         RandomForestClassifier(
-                            n_estimators=300,
+                            n_estimators=200,
                             max_depth=None,
-                            min_samples_leaf=2,
                             class_weight="balanced",
                             random_state=RANDOM_STATE,
                             n_jobs=1,
@@ -154,7 +153,7 @@ def main():
     resultados = []
     for nombre, pipeline in modelos:
         print(f"\nEntrenando {nombre}...")
-        resultado = evaluar_modelo(nombre, pipeline, x_train, x_test, y_train, y_test)
+        resultado = evaluar_modelo(nombre, pipeline, x, y, x_train, x_test, y_train, y_test)
         resultados.append(resultado)
         print(
             f"{nombre}: accuracy={resultado['accuracy']:.4f}, "
