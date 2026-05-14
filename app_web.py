@@ -71,12 +71,12 @@ HTML = """
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --sidebar: #0F2742;
+      --sidebar: #071A33;
       --primary: #2563EB;
       --primary-soft: #DBEAFE;
-      --bg: #F8FAFC;
+      --bg: #F6F8FB;
       --card: #FFFFFF;
-      --border: #E2E8F0;
+      --border: #DDE5F0;
       --text: #0F172A;
       --muted: #64748B;
       --concentrado: #22C55E;
@@ -86,7 +86,7 @@ HTML = """
       --sin-rostro: #EF4444;
       --state-color: #EF4444;
       --state-soft: rgba(239, 68, 68, 0.12);
-      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --shadow: 0 16px 38px rgba(15, 23, 42, 0.07);
     }
 
     * { box-sizing: border-box; }
@@ -96,7 +96,8 @@ HTML = """
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
+      background:
+        linear-gradient(180deg, #FFFFFF 0%, #F6F8FB 44%, #EEF3F8 100%);
       color: var(--text);
       font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
     }
@@ -111,7 +112,7 @@ HTML = """
       position: sticky;
       top: 0;
       height: 100vh;
-      background: linear-gradient(180deg, #0F2742 0%, #0B1B2F 100%);
+      background: linear-gradient(180deg, #071A33 0%, #0A2344 56%, #061426 100%);
       color: #FFFFFF;
       padding: 26px 20px;
       display: flex;
@@ -130,10 +131,10 @@ HTML = """
     .brand-mark {
       width: 56px;
       height: 56px;
-      border-radius: 18px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      background: rgba(37, 99, 235, 0.16);
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.55), rgba(14, 165, 233, 0.18));
       border: 1px solid rgba(219, 234, 254, 0.22);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
       font-size: 28px;
@@ -166,7 +167,7 @@ HTML = """
       gap: 11px;
       min-height: 44px;
       padding: 0 13px;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #CBD5E1;
       text-decoration: none;
       font-size: 14px;
@@ -178,8 +179,8 @@ HTML = """
     .menu a.active {
       background: var(--primary);
       color: #FFFFFF;
-      transform: translateX(2px);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.28);
+      transform: translateX(1px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.24);
     }
 
     .menu-icon {
@@ -195,8 +196,8 @@ HTML = """
     .academic-card {
       margin-top: auto;
       border: 1px solid rgba(219, 234, 254, 0.18);
-      border-radius: 18px;
-      background: rgba(37, 99, 235, 0.14);
+      border-radius: 14px;
+      background: rgba(37, 99, 235, 0.13);
       padding: 18px;
     }
 
@@ -218,7 +219,7 @@ HTML = """
 
     .main {
       min-width: 0;
-      padding: 28px;
+      padding: 30px 32px;
     }
 
     .hero {
@@ -236,21 +237,21 @@ HTML = """
     }
 
     .welcome-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 19px;
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
       color: #FFFFFF;
-      background: linear-gradient(135deg, #2563EB, #3B82F6);
-      box-shadow: 0 18px 35px rgba(37, 99, 235, 0.28);
+      background: linear-gradient(135deg, #1D4ED8, #2563EB);
+      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.24);
       font-size: 28px;
     }
 
     .welcome h2 {
       margin: 0;
-      color: var(--primary);
-      font-size: 30px;
+      color: var(--text);
+      font-size: 28px;
       line-height: 1.05;
       letter-spacing: 0;
     }
@@ -276,7 +277,7 @@ HTML = """
       align-items: center;
       gap: 10px;
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 14px;
       background: var(--card);
       padding: 10px 13px;
       box-shadow: var(--shadow);
@@ -325,13 +326,13 @@ HTML = """
     .panel,
     .info-card {
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 16px;
       background: var(--card);
       box-shadow: var(--shadow);
     }
 
     .kpi-card {
-      min-height: 112px;
+      min-height: 104px;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       gap: 13px;
@@ -343,8 +344,8 @@ HTML = """
     .kpi-card:hover,
     .panel:hover,
     .info-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.11);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.09);
     }
 
     .kpi-icon {
@@ -352,7 +353,7 @@ HTML = """
       height: 54px;
       display: grid;
       place-items: center;
-      border-radius: 50%;
+      border-radius: 16px;
       background: var(--primary-soft);
       color: var(--primary);
       font-size: 26px;
@@ -371,7 +372,7 @@ HTML = """
       display: block;
       margin-top: 7px;
       color: var(--text);
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 900;
     }
 
@@ -385,7 +386,7 @@ HTML = """
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 360px;
+      grid-template-columns: minmax(0, 1fr) 380px;
       gap: 18px;
       align-items: start;
     }
@@ -411,19 +412,64 @@ HTML = """
     .video-frame {
       position: relative;
       margin: 16px 18px 18px;
-      border: 4px solid var(--state-color);
-      border-radius: 18px;
+      border: 1px solid color-mix(in srgb, var(--state-color), #FFFFFF 42%);
+      border-radius: 14px;
       overflow: hidden;
-      background: #0F172A;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(37, 99, 235, 0.15), transparent 28%),
+        linear-gradient(145deg, #071529 0%, #0B1E3A 58%, #081426 100%);
       aspect-ratio: 16 / 9;
       transition: border-color 180ms ease, box-shadow 180ms ease;
-      box-shadow: 0 0 0 7px var(--state-soft);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 0 0 6px var(--state-soft);
+    }
+
+    .no-face-placeholder {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(226, 232, 240, 0.78);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .no-face-placeholder div {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+
+    .no-face-symbol {
+      width: 118px;
+      height: 118px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed rgba(226, 232, 240, 0.34);
+      border-radius: 50%;
+      color: rgba(226, 232, 240, 0.58);
+      font-size: 42px;
+    }
+
+    .no-face-placeholder strong {
+      color: #F8FAFC;
+      font-size: 17px;
+      font-weight: 950;
+    }
+
+    .no-face-placeholder span {
+      max-width: 260px;
+      color: rgba(203, 213, 225, 0.84);
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 700;
     }
 
     video,
     canvas {
       position: absolute;
       inset: 0;
+      z-index: 1;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -480,8 +526,8 @@ HTML = """
       align-items: center;
       gap: 16px;
       border: 1px solid rgba(226, 232, 240, 0.85);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.88);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(12px);
       padding: 13px 18px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
@@ -565,8 +611,8 @@ HTML = """
 
     .state-card {
       border: 1px solid color-mix(in srgb, var(--state-color), white 62%);
-      border-radius: 16px;
-      background: var(--state-soft);
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--state-soft), rgba(255, 255, 255, 0.84));
       padding: 18px;
     }
 
@@ -581,7 +627,7 @@ HTML = """
       height: 54px;
       display: grid;
       place-items: center;
-      border-radius: 50%;
+      border-radius: 16px;
       background: var(--state-color);
       color: #FFFFFF;
       font-size: 26px;
@@ -644,7 +690,7 @@ HTML = """
     button {
       min-height: 46px;
       border: 0;
-      border-radius: 12px;
+      border-radius: 10px;
       color: #FFFFFF;
       font-size: 14px;
       font-weight: 900;
@@ -658,8 +704,8 @@ HTML = """
     }
 
     .primary {
-      background: var(--primary);
-      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.25);
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.24);
     }
 
     .danger {
@@ -670,8 +716,8 @@ HTML = """
 
     .secondary {
       grid-column: 1 / -1;
-      background: #0F172A;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.2);
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.24);
     }
 
     button:disabled {
@@ -801,7 +847,7 @@ HTML = """
     .flow-step {
       position: relative;
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 14px;
       background: #FFFFFF;
       padding: 16px;
       min-height: 126px;
@@ -1094,10 +1140,10 @@ HTML = """
     <main id="dashboard" class="main">
       <header class="hero">
         <div class="welcome">
-          <div class="welcome-icon" aria-hidden="true">🎓</div>
+          <div class="welcome-icon" aria-hidden="true">⌁</div>
           <div>
-            <h2>¡Bienvenido!</h2>
-            <p>Sistema inteligente que analiza expresiones faciales para apoyar el aprendizaje y bienestar del estudiante.</p>
+            <h2>Panel de monitoreo de engagement estudiantil</h2>
+            <p>Análisis facial en tiempo real para apoyar el aprendizaje virtual.</p>
           </div>
         </div>
 
@@ -1120,6 +1166,13 @@ HTML = """
         <section id="monitor" class="panel" aria-label="Monitoreo en tiempo real">
           <h2 class="panel-title">📹 Monitoreo en tiempo real</h2>
           <div id="videoFrame" class="video-frame">
+            <div class="no-face-placeholder" aria-hidden="true">
+              <div>
+                <span class="no-face-symbol">◌</span>
+                <strong>Sin rostro detectado</strong>
+                <span>Colóquese frente a la cámara para iniciar el monitoreo.</span>
+              </div>
+            </div>
             <video id="video" autoplay playsinline muted></video>
             <canvas id="overlay"></canvas>
             <div id="faceBadge" class="video-badge">SIN ROSTRO</div>
