@@ -265,35 +265,40 @@ HTML = """
     }
 
     .badges {
-      display: grid;
-      grid-template-columns: repeat(4, max-content);
-      gap: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
     }
 
     .badge {
-      min-width: 118px;
+      min-width: 132px;
       min-height: 58px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 13px;
       background: var(--card);
-      padding: 10px 13px;
-      box-shadow: var(--shadow);
+      padding: 10px 14px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
     }
 
     .badge-icon {
       width: 34px;
       height: 34px;
-      border-radius: 50%;
+      border-radius: 12px;
       display: grid;
       place-items: center;
       background: #ECFDF5;
-      color: var(--concentrado);
-      font-size: 17px;
+      color: var(--primary);
+      font-size: 18px;
       flex: 0 0 auto;
     }
+
+    .badge:nth-child(2) .badge-icon { color: #0EA5E9; }
+    .badge:nth-child(3) .badge-icon { color: #22C55E; }
+    .badge:nth-child(4) .badge-icon { color: #22C55E; }
 
     .badge strong,
     .badge span {
@@ -309,10 +314,24 @@ HTML = """
     }
 
     .badge span {
-      margin-top: 3px;
+      position: relative;
+      margin-top: 4px;
+      padding-left: 12px;
       color: var(--muted);
       font-size: 11px;
       font-weight: 700;
+    }
+
+    .badge span::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22C55E;
+      transform: translateY(-50%);
     }
 
     .kpis {
@@ -1149,9 +1168,9 @@ HTML = """
 
         <div class="badges" aria-label="Indicadores rapidos">
           <div class="badge"><div class="badge-icon">🧠</div><div><strong>IA activa</strong><span>Inferencia en tiempo real</span></div></div>
-          <div class="badge"><div class="badge-icon">📶</div><div><strong>Tiempo real</strong><span>Conectado</span></div></div>
-          <div class="badge"><div class="badge-icon">〽</div><div><strong>FPS</strong><span id="frameState">0 FPS</span></div></div>
-          <div class="badge"><div class="badge-icon">●</div><div><strong>Sistema</strong><span id="systemValue">Listo</span></div></div>
+          <div class="badge"><div class="badge-icon">▥</div><div><strong>Tiempo real</strong><span>Conectado</span></div></div>
+          <div class="badge"><div class="badge-icon">⌁</div><div><strong>FPS</strong><span id="frameState">0 FPS</span></div></div>
+          <div class="badge"><div class="badge-icon">●</div><div><strong>Sistema</strong><span id="systemValue">Activo</span></div></div>
         </div>
       </header>
 
