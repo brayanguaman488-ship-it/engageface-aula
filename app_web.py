@@ -1110,7 +1110,7 @@ HTML = """
       </header>
 
       <section class="kpis" aria-label="Indicadores principales">
-        <article class="kpi-card"><div class="kpi-icon">🧠</div><div><span>Modelo actual</span><strong>Random Forest balanced</strong><small>Clasificación multiclase</small></div></article>
+        <article class="kpi-card"><div class="kpi-icon">🧠</div><div><span>Modelo actual</span><strong>Gradient Boosting</strong><small>Clasificación multiclase</small></div></article>
         <article class="kpi-card"><div class="kpi-icon">⌘</div><div><span>Features utilizadas</span><strong>11</strong><small>Razones geométricas</small></div></article>
         <article class="kpi-card"><div class="kpi-icon">🗄</div><div><span>Dataset procesado</span><strong>9,217</strong><small>Muestras analizadas</small></div></article>
         <article class="kpi-card"><div class="kpi-icon">🛡</div><div><span>Estado del sistema</span><strong id="kpiSystemValue">Activo</strong><small>Todo funcionando correctamente</small></div></article>
