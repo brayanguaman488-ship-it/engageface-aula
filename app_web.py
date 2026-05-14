@@ -1313,6 +1313,7 @@ HTML = """
       "confundido": "#F97316",
       "aburrido": "#9CA3AF",
       "sorprendido": "#EAB308",
+      "analizando": "#2563EB",
       "sin rostro": "#EF4444"
     };
     const stateConfig = {
@@ -1332,6 +1333,10 @@ HTML = """
         icon: "😮",
         description: "El estudiante presenta una reacción de alta sorpresa."
       },
+      "analizando": {
+        icon: "👁",
+        description: "La señal facial tiene baja confianza; el sistema sigue observando antes de clasificar."
+      },
       "sin rostro": {
         icon: "🙂",
         description: "No se detecta un rostro frente a la cámara."
@@ -1349,8 +1354,10 @@ HTML = """
     let evaluationTimer = null;
     let evaluationSamples = [];
     let reports = [];
+    let lastReliableLabel = null;
     const evaluationDurationMs = 10000;
     const reportLabels = ["concentrado", "confundido", "aburrido", "sorprendido", "sin rostro"];
+    const lowConfidenceThreshold = 0.45;
 
     function setStatus(label, color) {
       const upper = label.toUpperCase();
@@ -1524,6 +1531,28 @@ Lectura docente: ${reading}`;
       }
     }
 
+    function resolveDisplayLabel(label, confidence) {
+      const isLowConfidence = confidence === null || confidence === undefined || confidence < lowConfidenceThreshold;
+      if (label === "sin rostro") {
+        lastReliableLabel = null;
+        return "sin rostro";
+      }
+
+      if (label === "aburrido" && isLowConfidence) {
+        return lastReliableLabel || "analizando";
+      }
+
+      if (!isLowConfidence) {
+        lastReliableLabel = label;
+      }
+
+      return label;
+    }
+
+    function labelForEvaluation(label) {
+      return reportLabels.includes(label) ? label : "sin rostro";
+    }
+
     function smoothLabel(label) {
       if (label === "sin rostro") {
         labelHistory = [];
@@ -1531,7 +1560,7 @@ Lectura docente: ${reading}`;
       }
 
       labelHistory.push(label);
-      if (labelHistory.length > 7) labelHistory.shift();
+      if (labelHistory.length > 12) labelHistory.shift();
 
       const counts = {};
       for (const item of labelHistory) counts[item] = (counts[item] || 0) + 1;
@@ -1592,14 +1621,15 @@ Lectura docente: ${reading}`;
           body: JSON.stringify({ image })
         });
         const data = await response.json();
-        const stableLabel = smoothLabel(data.label);
+        const displayLabel = resolveDisplayLabel(data.label, data.confidence);
+        const stableLabel = smoothLabel(displayLabel);
         const stableColor = colorMap[stableLabel] || data.color;
 
         setStatus(stableLabel, stableColor);
         setConfidence(data.confidence);
         if (evaluating) {
           evaluationSamples.push({
-            label: stableLabel,
+            label: labelForEvaluation(stableLabel),
             confidence: data.confidence,
             hasFace: Boolean(data.points && data.points.length)
           });
@@ -1638,6 +1668,7 @@ Lectura docente: ${reading}`;
         });
         video.srcObject = stream;
         labelHistory = [];
+        lastReliableLabel = null;
         hint.textContent = "Sistema activo.";
         hint.classList.remove("error");
         setStatus("sin rostro", "#ef4444");
@@ -1659,6 +1690,7 @@ Lectura docente: ${reading}`;
       }
       stream = null;
       labelHistory = [];
+      lastReliableLabel = null;
       resizeCanvas();
       overlayCtx.clearRect(0, 0, overlay.width, overlay.height);
       setStatus("sin rostro", "#ef4444");
