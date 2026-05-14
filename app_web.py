@@ -1087,9 +1087,7 @@ HTML = """
 
       <div class="academic-card">
         <div aria-hidden="true">👥</div>
-        <strong>Proyecto Académico</strong>
-        <span>IA aplicada a la educación</span>
-        <span>Universidad 2026</span>
+        <strong>Proyecto 2026</strong>
       </div>
     </aside>
 
