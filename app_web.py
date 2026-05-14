@@ -1355,9 +1355,12 @@ HTML = """
     let evaluationSamples = [];
     let reports = [];
     let lastReliableLabel = null;
+    let pendingBoredFrames = 0;
     const evaluationDurationMs = 10000;
     const reportLabels = ["concentrado", "confundido", "aburrido", "sorprendido", "sin rostro"];
     const lowConfidenceThreshold = 0.45;
+    const boredConfidenceThreshold = 0.55;
+    const boredFramesRequired = 5;
 
     function setStatus(label, color) {
       const upper = label.toUpperCase();
@@ -1535,11 +1538,22 @@ Lectura docente: ${reading}`;
       const isLowConfidence = confidence === null || confidence === undefined || confidence < lowConfidenceThreshold;
       if (label === "sin rostro") {
         lastReliableLabel = null;
+        pendingBoredFrames = 0;
         return "sin rostro";
       }
 
       if (label === "aburrido" && isLowConfidence) {
+        pendingBoredFrames = 0;
         return lastReliableLabel || "analizando";
+      }
+
+      if (label === "aburrido" && lastReliableLabel === "concentrado") {
+        pendingBoredFrames += 1;
+        if (confidence < boredConfidenceThreshold || pendingBoredFrames < boredFramesRequired) {
+          return "concentrado";
+        }
+      } else {
+        pendingBoredFrames = 0;
       }
 
       if (!isLowConfidence) {
@@ -1669,6 +1683,7 @@ Lectura docente: ${reading}`;
         video.srcObject = stream;
         labelHistory = [];
         lastReliableLabel = null;
+        pendingBoredFrames = 0;
         hint.textContent = "Sistema activo.";
         hint.classList.remove("error");
         setStatus("sin rostro", "#ef4444");
@@ -1691,6 +1706,7 @@ Lectura docente: ${reading}`;
       stream = null;
       labelHistory = [];
       lastReliableLabel = null;
+      pendingBoredFrames = 0;
       resizeCanvas();
       overlayCtx.clearRect(0, 0, overlay.width, overlay.height);
       setStatus("sin rostro", "#ef4444");
