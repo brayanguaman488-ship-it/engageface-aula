@@ -28,12 +28,14 @@ os.environ.setdefault("MPLCONFIGDIR", str(MPL_CACHE_DIR))
 
 import mediapipe as mp
 
+import database
 import engagement_core
 
 
 app = Flask(__name__)
 
 modelo, scaler, columnas_features = engagement_core.cargar_recursos_modelo()
+database.init_db()
 face_mesh_lock = Lock()
 face_mesh = mp.solutions.face_mesh.FaceMesh(
     static_image_mode=False,
@@ -1855,6 +1857,17 @@ def favicon():
     return Response(FAVICON_SVG, mimetype="image/svg+xml")
 
 
+@app.route("/db-status")
+def db_status():
+    return jsonify(
+        {
+            "enabled": database.is_enabled(),
+            "last_error": database.last_error(),
+            "save_every_n_predictions": database.SAVE_EVERY_N_PREDICTIONS,
+        }
+    )
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
     payload = request.get_json(silent=True) or {}
@@ -1894,6 +1907,17 @@ def predict():
         features = engagement_core.calcular_features(landmarks, width, height)
         label, confidence = predict_label_and_confidence(features)
         points = landmark_points(landmarks, width, height)
+
+    database.save_prediction(
+        label=label,
+        confidence=confidence,
+        face_detected=bool(results.multi_face_landmarks),
+        frame_width=width,
+        frame_height=height,
+        points_count=len(points),
+        client_ip=request.headers.get("X-Forwarded-For", request.remote_addr),
+        user_agent=request.headers.get("User-Agent"),
+    )
 
     return jsonify(
         {
